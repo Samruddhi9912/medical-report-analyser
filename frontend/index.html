@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClariMed - Medical Report Understanding & Patient Assistance System</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Custom Healthcare Design System -->
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              900: '#0c4a6e',
+            },
+            tealsoft: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+            },
+            navy: {
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-navy-900 min-h-screen flex flex-col antialiased">
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs no-print">
+    <div class="px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4">
+      
+      <!-- Mobile Sidebar Toggle & App Brand -->
+      <div class="flex items-center gap-3">
+        <button id="btn-toggle-sidebar" class="lg:hidden p-2 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-100 focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+
+        <div class="flex items-center gap-2.5 cursor-pointer" onclick="navigateTo('dashboard')">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-tealsoft-500 flex items-center justify-center text-white shadow-sm font-bold text-lg">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base font-bold tracking-tight text-navy-950">ClariMed</span>
+              <span class="px-2 py-0.5 text-[11px] font-semibold bg-tealsoft-100 text-tealsoft-700 rounded-full">College MVP</span>
+            </div>
+            <p class="text-[11px] text-slate-500 hidden sm:block">Medical Report Understanding & Patient Assistance System</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Right Search, Language, Alerts & User Profile -->
+      <div class="flex items-center gap-3">
+        
+        <!-- Search bar -->
+        <div class="relative hidden md:block w-56 lg:w-72">
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" id="top-search-input" placeholder="Search tests, medicines, doctors..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-1.5 text-xs text-navy-900 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition">
+        </div>
+
+        <!-- Language Selector (Feature 2 & Tech Stack) -->
+        <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200">
+          <span class="text-xs font-semibold text-slate-500 px-1 hidden sm:inline">🌐</span>
+          <select id="global-lang-select" class="bg-white text-xs font-semibold text-navy-800 rounded-lg px-2 py-1 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <option value="en" selected>English</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="es">Español (Spanish)</option>
+            <option value="mr">मराठी (Marathi)</option>
+          </select>
+        </div>
+
+        <!-- Notification Bell with Active Badge -->
+        <button id="btn-notification-bell" class="relative p-2 rounded-xl text-slate-600 hover:text-navy-900 hover:bg-slate-100 transition" title="Patient Alerts">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          <span class="w-2 h-2 rounded-full bg-amber-500 absolute top-2 right-2 ring-2 ring-white"></span>
+        </button>
+
+        <!-- User Profile Chip -->
+        <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
+          <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 font-bold flex items-center justify-center text-xs border border-brand-200">
+            RS
+          </div>
+          <div class="hidden sm:block text-left">
+            <h4 class="text-xs font-bold text-navy-900 leading-tight">Ramesh Sharma</h4>
+            <p class="text-[10px] text-slate-500">Patient (58 Y / M)</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= APP WRAPPER: SIDEBAR + MAIN CONTENT ================= -->
+  <div class="flex-1 flex overflow-hidden">
+    
+    <!-- Left Navigation Sidebar (10 Items from Requirements) -->
+    <aside id="app-sidebar" class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 fixed lg:static inset-y-0 left-0 z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out no-print">
+      <div class="space-y-6">
+        
+        <!-- Large Action: Upload Medical Report -->
+        <button onclick="openUploadModal()" class="w-full py-2.5 px-4 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold shadow-sm transition flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          <span>Upload Medical Report</span>
+        </button>
+
+        <!-- 10 Navigation Items -->
+        <nav class="space-y-1" id="nav-items-container">
+          <!-- 1. Dashboard -->
+          <button class="nav-btn active" data-page="dashboard">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <span>1. Dashboard</span>
+          </button>
+
+          <!-- 2. Upload Report -->
+          <button class="nav-btn" data-page="upload">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+            <span>2. Upload Report</span>
+          </button>
+
+          <!-- 3. My Reports -->
+          <button class="nav-btn" data-page="my-reports">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span>3. My Reports</span>
+          </button>
+
+          <!-- 4. Medical History & Compare -->
+          <button class="nav-btn" data-page="medical-history">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>4. Medical History</span>
+          </button>
+
+          <!-- 5. Medicine Information -->
+          <button class="nav-btn" data-page="medicine-info">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            <span>5. Medicine Information</span>
+          </button>
+
+          <!-- 6. Doctor Questions -->
+          <button class="nav-btn" data-page="doctor-questions">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>6. Doctor Questions</span>
+          </button>
+
+          <!-- 7. Reminders -->
+          <button class="nav-btn" data-page="reminders">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            <div class="flex items-center justify-between w-full">
+              <span>7. Reminders</span>
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            </div>
+          </button>
+
+          <!-- 8. Appointments -->
+          <button class="nav-btn" data-page="appointments">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <span>8. Appointments</span>
+          </button>
+
+          <!-- 9. Family Access -->
+          <button class="nav-btn" data-page="family-access">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span>9. Family Access</span>
+          </button>
+
+          <!-- 10. Settings -->
+          <button class="nav-btn" data-page="settings">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>10. Settings</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Healthcare Safety Disclaimer Footer (PRD SR-09) -->
+      <div class="pt-4 border-t border-slate-100 text-[10px] text-slate-400 space-y-1">
+        <p class="font-semibold text-slate-500">🛡️ Patient Educational Tool</p>
+        <p class="leading-tight">Not a medical diagnosis. Always consult your qualified doctor before making health decisions.</p>
+      </div>
+    </aside>
+
+    <!-- ================= MAIN SCROLLABLE CONTENT VIEW ================= -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50 min-h-screen">
+      <div id="main-view-container" class="max-w-6xl mx-auto space-y-6">
+        <!-- Injected dynamically by app.js based on current page -->
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ================= MODAL: UPLOAD MEDICAL REPORT (PAGE C & D) ================= -->
+  <div id="modal-upload" class="fixed inset-0 bg-navy-950/50 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200">
+      
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+        <div>
+          <h3 class="text-base font-bold text-navy-950 flex items-center gap-2">
+            <span>📄</span> Upload Medical Document
+          </h3>
+          <p class="text-xs text-slate-500">Laboratory reports, discharge summaries, or prescriptions</p>
+        </div>
+        <button onclick="closeUploadModal()" class="text-slate-400 hover:text-slate-600 p-1">✕</button>
+      </div>
+
+      <!-- Drag & Drop Zone -->
+      <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-50/50 hover:bg-brand-50/30">
+        <div class="w-12 h-12 mx-auto rounded-full bg-brand-100 text-brand-600 flex items-center justify-center mb-3">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+        </div>
+        <p class="text-xs font-bold text-navy-900">Drag and drop your medical report here, or <span class="text-brand-600 underline">Browse Files</span></p>
+        <p class="text-[11px] text-slate-400 mt-1">Supports PDF, JPG, PNG (Max 15MB)</p>
+        <input type="file" id="modal-file-input" class="hidden" accept=".pdf,.jpg,.jpeg,.png,.txt">
+      </div>
+
+      <!-- Selected File Info -->
+      <div id="selected-file-preview" class="hidden mt-4 p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">📎</span>
+          <div>
+            <h5 id="selected-file-name" class="text-xs font-bold text-navy-900 truncate max-w-xs">blood_test.pdf</h5>
+            <p id="selected-file-size" class="text-[10px] text-slate-500">1.2 MB</p>
+          </div>
+        </div>
+        <button id="btn-remove-selected-file" class="text-xs text-rose-600 hover:text-rose-800 font-semibold">Remove</button>
+      </div>
+
+      <!-- Medical-Only Validation Warning Note -->
+      <div class="mt-4 p-3 rounded-xl bg-tealsoft-50 border border-tealsoft-200 text-[11px] text-tealsoft-800 flex items-start gap-2">
+        <span class="text-sm">🛡️</span>
+        <p><strong>Medical Content Only:</strong> Non-medical files (invoices, food bills, resumes, general photos) are automatically detected and rejected for patient clinical safety.</p>
+      </div>
+
+      <!-- 6-Stage Processing Stepper (Page D) -->
+      <div id="processing-stepper" class="hidden mt-5 space-y-3 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+        <h4 class="text-xs font-bold text-navy-900 flex items-center justify-between">
+          <span>Processing Document...</span>
+          <span id="stepper-percentage" class="text-brand-600">0%</span>
+        </h4>
+        
+        <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+          <div id="stepper-progress-bar" class="bg-brand-600 h-2 rounded-full transition-all duration-300" style="width: 15%"></div>
+        </div>
+
+        <ul class="text-[11px] space-y-1 text-slate-600" id="stepper-stages-list">
+          <li id="stage-1" class="font-semibold text-brand-700">1. Uploading document...</li>
+          <li id="stage-2" class="text-slate-400">2. Validating medical relevance...</li>
+          <li id="stage-3" class="text-slate-400">3. Extracting clinical text (PyMuPDF)...</li>
+          <li id="stage-4" class="text-slate-400">4. Identifying test values & reference ranges...</li>
+          <li id="stage-5" class="text-slate-400">5. Preparing plain-language explanations...</li>
+          <li id="stage-6" class="text-slate-400">6. Analysis completed!</li>
+        </ul>
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-5 flex gap-2">
+        <button onclick="closeUploadModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold">Cancel</button>
+        <button id="btn-analyse-modal" class="flex-1 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-bold shadow-sm transition">Analyse Report</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= TOAST CONTAINER ================= -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+  <!-- Application Bundle -->
+  <script src="app.js"></script>
+</body>
+</html>
